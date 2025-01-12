@@ -85,9 +85,6 @@
             display: none;
             margin-top: 30px;
         }
-        #leaderboardTable {
-            display: none;
-        }
         .leaderboard-item {
             background-color: #3e004f;
             padding: 10px;
@@ -151,6 +148,9 @@
         }
 
         function calculatePoints() {
+            // Reset the players' data before calculating new points
+            playersData = [];
+            
             const rows = document.querySelectorAll("#playerTable tr");
 
             rows.forEach((row, index) => {
@@ -169,10 +169,7 @@
                 // Save player data
                 const playerName = row.children[1].querySelector("input").value;
                 if (playerName) {
-                    if (!playersData[index]) {
-                        playersData[index] = { name: playerName, points: [] };
-                    }
-                    playersData[index].points.push(totalPoints);
+                    playersData.push({ name: playerName, points: totalPoints });
                 }
             });
 
@@ -181,21 +178,18 @@
         }
 
         function showLeaderboard() {
-            const leaderboard = playersData.map(player => {
-                const totalPoints = player.points.reduce((sum, points) => sum + points, 0);
-                return { name: player.name, totalPoints };
-            });
-
-            leaderboard.sort((a, b) => b.totalPoints - a.totalPoints);
-
-            // Show the leaderboard in the desired format
+            // Clear previous leaderboard content
             const leaderboardList = document.getElementById("leaderboardList");
             leaderboardList.innerHTML = "";
 
+            // Sort players by their total points
+            const leaderboard = playersData.sort((a, b) => b.points - a.points);
+
+            // Generate leaderboard
             leaderboard.forEach((player, index) => {
                 const leaderboardItem = document.createElement("div");
                 leaderboardItem.classList.add("leaderboard-item");
-                leaderboardItem.textContent = `Top ${index + 1}: ${player.name} - ${player.totalPoints} points`;
+                leaderboardItem.textContent = `Top ${index + 1}: ${player.name} - ${player.points} points`;
                 leaderboardList.appendChild(leaderboardItem);
             });
 
