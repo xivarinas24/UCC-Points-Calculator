@@ -81,7 +81,7 @@
             padding: 5px;
             border-radius: 3px;
         }
-        #leaderboardContainer {
+        #leaderboardContainer, #roomLeaderboardContainer {
             display: none;
             margin-top: 30px;
         }
@@ -126,12 +126,41 @@
             <h2>Leaderboard</h2>
             <div id="leaderboardList"></div>
         </div>
+
+        <!-- Room Points Calculation Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Player Name</th>
+                    <th>Room 1</th>
+                    <th>Room 2</th>
+                    <th>Room 3</th>
+                    <th>Room 4</th>
+                    <th>Total Points</th>
+                </tr>
+            </thead>
+            <tbody id="roomPlayerTable"></tbody>
+        </table>
+        <a href="#" class="button" onclick="addRoomPlayerRow()">Add Room Player</a>
+        <a href="#" class="button" onclick="calculateRoomPoints()">Calculate Room Points</a>
+
+        <!-- Show Room Leaderboard Button -->
+        <a href="#" class="button" onclick="showRoomLeaderboard()" id="showRoomLeaderboardButton" style="display: none;">Show Room Leaderboard</a>
+
+        <!-- Room Leaderboard -->
+        <div id="roomLeaderboardContainer">
+            <h2>Room Leaderboard</h2>
+            <div id="roomLeaderboardList"></div>
+        </div>
     </div>
 
     <script>
         const pointsSystem = [15, 12, 10, 8, 6, 5, 4, 3, 2, 1];
         let playersData = [];
+        let roomPlayersData = [];
 
+        // Add a player row for match results
         function addPlayerRow() {
             const table = document.getElementById("playerTable");
             const rowCount = table.rows.length + 1;
@@ -147,11 +176,12 @@
             table.appendChild(row);
         }
 
+        // Calculate points for match results (placement + kills)
         function calculatePoints() {
-            // Reset the players' data before calculating new points
-            playersData = [];
-            
             const rows = document.querySelectorAll("#playerTable tr");
+            
+            // Clear the existing leaderboard before recalculating
+            playersData = []; 
 
             rows.forEach((row, index) => {
                 const placement = parseInt(row.children[2].querySelector("input").value);
@@ -177,15 +207,14 @@
             document.getElementById("showLeaderboardButton").style.display = "block";
         }
 
+        // Show the match leaderboard
         function showLeaderboard() {
-            // Clear previous leaderboard content
+            // Reset the leaderboard before showing the updated one
             const leaderboardList = document.getElementById("leaderboardList");
             leaderboardList.innerHTML = "";
 
-            // Sort players by their total points
             const leaderboard = playersData.sort((a, b) => b.points - a.points);
 
-            // Generate leaderboard
             leaderboard.forEach((player, index) => {
                 const leaderboardItem = document.createElement("div");
                 leaderboardItem.classList.add("leaderboard-item");
@@ -193,8 +222,71 @@
                 leaderboardList.appendChild(leaderboardItem);
             });
 
-            // Show the leaderboard container
             document.getElementById("leaderboardContainer").style.display = "block";
+        }
+
+        // Add new row for room-based points table
+        function addRoomPlayerRow() {
+            const table = document.getElementById("roomPlayerTable");
+            const rowCount = table.rows.length + 1;
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${rowCount}</td>
+                <td><input type="text" placeholder="Enter Player Name"></td>
+                <td><input type="number" placeholder="Room 1"></td>
+                <td><input type="number" placeholder="Room 2"></td>
+                <td><input type="number" placeholder="Room 3"></td>
+                <td><input type="number" placeholder="Room 4"></td>
+                <td class="points">0</td>
+            `;
+            table.appendChild(row);
+        }
+
+        // Calculate total points for rooms (Room 1 + Room 2 + Room 3 + Room 4)
+        function calculateRoomPoints() {
+            roomPlayersData = [];  // Clear previous room player data
+
+            const rows = document.querySelectorAll("#roomPlayerTable tr");
+
+            rows.forEach((row) => {
+                let totalPoints = 0;
+
+                // Loop through each room (Room 1 to Room 4)
+                for (let i = 2; i <= 5; i++) {
+                    const roomPoints = parseInt(row.children[i].querySelector("input").value) || 0;
+                    totalPoints += roomPoints;  // Add the room points to the total
+                }
+
+                row.children[6].textContent = totalPoints;
+
+                // Save player data for room calculations
+                const playerName = row.children[1].querySelector("input").value;
+                if (playerName) {
+                    roomPlayersData.push({ name: playerName, points: totalPoints });
+                }
+            });
+
+            // Show the "Show Room Leaderboard" button after calculating room points
+            document.getElementById("showRoomLeaderboardButton").style.display = "block";
+        }
+
+        // Show the room leaderboard
+        function showRoomLeaderboard() {
+            // Reset the room leaderboard before showing the updated one
+            const roomLeaderboardList = document.getElementById("roomLeaderboardList");
+            roomLeaderboardList.innerHTML = "";
+
+            const roomLeaderboard = roomPlayersData.sort((a, b) => b.points - a.points);
+
+            roomLeaderboard.forEach((player, index) => {
+                const leaderboardItem = document.createElement("div");
+                leaderboardItem.classList.add("leaderboard-item");
+                leaderboardItem.textContent = `Top ${index + 1}: ${player.name} - ${player.points} points`;
+                roomLeaderboardList.appendChild(leaderboardItem);
+            });
+
+            document.getElementById("roomLeaderboardContainer").style.display = "block";
         }
     </script>
 </body>
