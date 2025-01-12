@@ -166,7 +166,7 @@
             const rowCount = table.rows.length + 1;
             const row = document.createElement("tr");
 
-            row.innerHTML = `
+            row.innerHTML = `  
                 <td>${rowCount}</td>
                 <td><input type="text" placeholder="Enter Player Name"></td>
                 <td><input type="number" min="1" max="60" placeholder="Placement"></td>
@@ -179,7 +179,6 @@
         // Calculate points for match results (placement + kills)
         function calculatePoints() {
             const rows = document.querySelectorAll("#playerTable tr");
-            
             // Clear the existing leaderboard before recalculating
             playersData = []; 
 
@@ -231,7 +230,7 @@
             const rowCount = table.rows.length + 1;
             const row = document.createElement("tr");
 
-            row.innerHTML = `
+            row.innerHTML = `  
                 <td>${rowCount}</td>
                 <td><input type="text" placeholder="Enter Player Name"></td>
                 <td><input type="number" placeholder="Room 1"></td>
