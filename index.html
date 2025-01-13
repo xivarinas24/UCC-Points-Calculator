@@ -7,84 +7,92 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #2c003e;
-            margin: 0;
-            padding: 20px;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 20px;
-            flex-direction: row;
-        }
-        .left-image {
-            width: 486px;
-            height: 513px;
-            background-image: url('ggg.png');
+            background-image: url('triple.png');
             background-size: cover;
             background-position: center;
-            margin-right: 20px;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            color: #ffffff;
         }
+
         .content {
             max-width: 700px;
             width: 100%;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0);
+            margin: 20px auto;
         }
+
         header {
             text-align: center;
             margin-bottom: 20px;
         }
+
         header img {
-            width: 50px;
-            height: 50px;
+            width: 70px;
+            height: 70px;
             vertical-align: middle;
         }
+
         header h1 {
             display: inline;
-            color: #ffcc00;
+            color: #470163;
             margin-left: 10px;
-            font-size: 32px;
+            font-size: 40px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: #3e004f;
             color: #ffffff;
             margin: 20px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0);
         }
+
         th, td {
-            border: 1px solid #600080;
+            border: 1px solid #800000;
             padding: 10px;
             text-align: center;
         }
+
         th {
-            background-color: #4b0066;
+            background-color: rgba(179, 0, 0, 0.9);
         }
+
         .button {
             display: block;
             width: 200px;
-            margin: 20px auto;
             padding: 10px;
-            background-color: #ffcc00;
-            color: #2c003e;
+            background-color: #470163;
+            color: #ffffff;
             text-align: center;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 15px;
             font-weight: bold;
+            margin: 10px;
         }
+
         .button:hover {
-            background-color: #e6b800;
+            background-color: #cc005f;
         }
+
         input {
-            background-color: #5a0078;
+            background-color: #470163;
             color: #ffffff;
             border: 1px solid #8000a0;
             padding: 5px;
             border-radius: 3px;
         }
-        #leaderboardContainer, #roomLeaderboardContainer {
+
+        #leaderboardContainer, #roomLeaderboardContainer, #combinedLeaderboardContainer {
             display: none;
             margin-top: 30px;
         }
+
         .leaderboard-item {
             background-color: #3e004f;
             padding: 10px;
@@ -92,66 +100,139 @@
             margin: 5px;
             font-size: 18px;
         }
+
+        .fixed-table {
+            table-layout: fixed;
+        }
+
+        table.fixed-table tbody tr td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
-    <div class="left-image"></div>
     <div class="content">
         <header>
-            <img src="Iconzada (1).png" alt="UCC Logo">
+            <img src="xiv.png" alt="UCC Logo">
             <h1>UCC Points Calculator</h1>
         </header>
+
+        <div style="text-align: center;">
+            <input id="teamCountInput" type="number" min="1" placeholder="Enter number of teams" style="width: 100px; margin-bottom: 20px"/>
+        </div>
 
         <!-- Match Results Table -->
         <table>
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>team Name</th>
-                    <th>Placement</th>
-                    <th>Kills</th>
-                    <th>Total Points</th>
+                    <th>PLAYER NAME</th>
+                    <th>PLACEMENT</th>
+                    <th>KILLS</th>
+                    <th>TOTAL POINTS</th>
                 </tr>
             </thead>
             <tbody id="playerTable"></tbody>
         </table>
-        <a href="#" class="button" onclick="addPlayerRow()">Add team</a>
-        <a href="#" class="button" onclick="calculatePoints()">Calculate Match Points</a>
 
-        <!-- Show Leaderboard Button -->
+        <div class="button-container">
+            <a href="#" class="button" onclick="addMultiplePlayerRows()">ADD PLAYER</a>
+            <a href="#" class="button" onclick="calculatePoints()">CALCULATE 1 ROOM</a>
+        </div>
+
         <a href="#" class="button" onclick="showLeaderboard()" id="showLeaderboardButton" style="display: none;">Show Leaderboard</a>
 
-        <!-- Leaderboard -->
         <div id="leaderboardContainer">
             <h2>Leaderboard</h2>
             <div id="leaderboardList"></div>
         </div>
 
         <!-- Room Points Calculation Table -->
-        <table>
+        <table class="fixed-table">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>team Name</th>
-                    <th>Room 1</th>
-                    <th>Room 2</th>
-                    <th>Room 3</th>
-                    <th>Room 4</th>
-                    <th>Total Points</th>
+                    <th> Name</th>
+                    <th>ROOM 1</th>
+                    <th>ROOM 2</th>
+                    <th>ROOM 3</th>
+                    <th>ROOM 4</th>
+                    <th>TOTAL POINTS</th>
                 </tr>
             </thead>
             <tbody id="roomPlayerTable"></tbody>
         </table>
-        <a href="#" class="button" onclick="addRoomPlayerRow()">Add team room</a>
-        <a href="#" class="button" onclick="calculateRoomPoints()">Calculate Room Points</a>
 
-        <!-- Show Room Leaderboard Button -->
-        <a href="#" class="button" onclick="showRoomLeaderboard()" id="showRoomLeaderboardButton" style="display: none;">Show Room Leaderboard</a>
+        <div class="button-container">
+            <a href="#" class="button" onclick="addMultipleRoomPlayerRows()">ADD PLAYER </a>
+            <a href="#" class="button" onclick="calculateRoomPoints()">FINAL RESULTS</a>
+        </div>
 
-        <!-- Room Leaderboard -->
+        <a href="#" class="button" onclick="showRoomLeaderboard()" id="showRoomLeaderboardButton" style="display: none;">SHOW FINAL RESULTS</a>
+
         <div id="roomLeaderboardContainer">
-            <h2>Room Leaderboard</h2>
+            <h2>FINAL RESULTS</h2>
             <div id="roomLeaderboardList"></div>
+        </div>
+
+        <!-- Title for Duos and Teams Final Results -->
+        <div class="title">Duos and Teams Final Results</div>
+
+        <!-- Combined Room Points Calculation Table -->
+        <table class="fixed-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Team Name</th>
+                    <th>R 1 Place</th>
+                    <th>R 1 Kills</th>
+                    <th>R 2 Place</th>
+                    <th>R 2 Kills</th>
+                    <th>R 3 Place</th>
+                    <th>R 3 Kills</th>
+                    <th>R 4 Place</th>
+                    <th>R 4 Kills</th>
+                    <th>Total </th>
+                </tr>
+            </thead>
+            <tbody id="combinedRoomPlayerTable"></tbody>
+        </table>
+
+        <div class="button-container">
+            <a href="#" class="button" onclick="addMultipleCombinedRoomRows()">ADD TEAM</a>
+            <a href="#" class="button" onclick="calculateCombinedRoomPoints()">FINAL RESULTS</a>
+        </div>
+        <!-- Corrected the ID for the button -->
+        <a href="#" class="button" onclick="showCombinedRoomLeaderboard()" id="showCombinedRoomLeaderboardButton" style="display: none;">Show Final Results</a>
+
+        <div id="combinedLeaderboardContainer">
+            <h2>FINAL RESULTS</h2>
+            <div id="combinedRoomLeaderboardList"></div>
         </div>
     </div>
 
@@ -159,27 +240,31 @@
         const pointsSystem = [15, 12, 10, 8, 6, 5, 4, 3, 2, 1];
         let playersData = [];
         let roomPlayersData = [];
+        let combinedRoomPlayersData = [];
 
-        // Add a player row for match results
-        function addPlayerRow() {
+        // Add multiple player rows for match results based on input number
+        function addMultiplePlayerRows() {
             const table = document.getElementById("playerTable");
             const rowCount = table.rows.length + 1;
-            const row = document.createElement("tr");
+            const teamCount = parseInt(document.getElementById("teamCountInput").value) || 1;
 
-            row.innerHTML = `  
-                <td>${rowCount}</td>
-                <td><input type="text" placeholder="Enter team Name"></td>
-                <td><input type="number" min="1" max="60" placeholder="Placement"></td>
-                <td><input type="number" min="0" placeholder="Kills"></td>
-                <td class="points">0</td>
-            `;
-            table.appendChild(row);
+            for (let i = 0; i < teamCount; i++) {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `  
+                    <td>${rowCount + i}</td>
+                    <td><input type="text" placeholder="ENTER PLAYER NAME"></td>
+                    <td><input type="number" min="1" max="60" placeholder="Placement"></td>
+                    <td><input type="number" min="0" placeholder="Kills"></td>
+                    <td class="points">0</td>
+                `;
+                table.appendChild(row);
+            }
         }
 
         // Calculate points for match results (placement + kills)
         function calculatePoints() {
             const rows = document.querySelectorAll("#playerTable tr");
-            // Clear the existing leaderboard before recalculating
             playersData = []; 
 
             rows.forEach((row, index) => {
@@ -195,20 +280,16 @@
                 const totalPoints = placementPoints + kills;
                 pointsCell.textContent = totalPoints;
 
-                // Save player data
                 const playerName = row.children[1].querySelector("input").value;
                 if (playerName) {
                     playersData.push({ name: playerName, points: totalPoints });
                 }
             });
 
-            // Show the "Show Leaderboard" button after calculating points
             document.getElementById("showLeaderboardButton").style.display = "block";
         }
 
-        // Show the match leaderboard
         function showLeaderboard() {
-            // Reset the leaderboard before showing the updated one
             const leaderboardList = document.getElementById("leaderboardList");
             leaderboardList.innerHTML = "";
 
@@ -224,61 +305,60 @@
             document.getElementById("leaderboardContainer").style.display = "block";
         }
 
-        // Add new row for room-based points table
-        function addRoomPlayerRow() {
+        // Add multiple room player rows
+        function addMultipleRoomPlayerRows() {
             const table = document.getElementById("roomPlayerTable");
             const rowCount = table.rows.length + 1;
-            const row = document.createElement("tr");
+            const teamCount = parseInt(document.getElementById("teamCountInput").value) || 1;
 
-            row.innerHTML = `  
-                <td>${rowCount}</td>
-                <td><input type="text" placeholder="Enter team Name"></td>
-                <td><input type="number" placeholder="Room 1"></td>
-                <td><input type="number" placeholder="Room 2"></td>
-                <td><input type="number" placeholder="Room 3"></td>
-                <td><input type="number" placeholder="Room 4"></td>
-                <td class="points">0</td>
-            `;
-            table.appendChild(row);
+            for (let i = 0; i < teamCount; i++) {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `  
+                    <td>${rowCount + i}</td>
+                    <td><input type="text" placeholder="ENTER PLAYER NAME"></td>
+                    <td><input type="number" min="1" max="60" placeholder="ROOM 1"></td>
+                    <td><input type="number" min="1" max="60" placeholder="ROOM 2"></td>
+                    <td><input type="number" min="1" max="60" placeholder="ROOM 3"></td>
+                    <td><input type="number" min="1" max="60" placeholder="ROOM 4"></td>
+                    <td class="totalPoints">0</td>
+                `;
+                table.appendChild(row);
+            }
         }
 
-        // Calculate total points for rooms (Room 1 + Room 2 + Room 3 + Room 4)
+        // Calculate room points (for 4 rooms)
         function calculateRoomPoints() {
-            roomPlayersData = [];  // Clear previous room player data
-
             const rows = document.querySelectorAll("#roomPlayerTable tr");
+            roomPlayersData = [];
 
-            rows.forEach((row) => {
-                let totalPoints = 0;
+            rows.forEach((row, index) => {
+                const room1 = parseInt(row.children[2].querySelector("input").value) || 0;
+                const room2 = parseInt(row.children[3].querySelector("input").value) || 0;
+                const room3 = parseInt(row.children[4].querySelector("input").value) || 0;
+                const room4 = parseInt(row.children[5].querySelector("input").value) || 0;
+                const totalPointsCell = row.children[6];
 
-                // Loop through each room (Room 1 to Room 4)
-                for (let i = 2; i <= 5; i++) {
-                    const roomPoints = parseInt(row.children[i].querySelector("input").value) || 0;
-                    totalPoints += roomPoints;  // Add the room points to the total
-                }
+                const totalPoints = room1 + room2 + room3 + room4;
+                totalPointsCell.textContent = totalPoints;
 
-                row.children[6].textContent = totalPoints;
-
-                // Save player data for room calculations
                 const playerName = row.children[1].querySelector("input").value;
                 if (playerName) {
                     roomPlayersData.push({ name: playerName, points: totalPoints });
                 }
             });
 
-            // Show the "Show Room Leaderboard" button after calculating room points
             document.getElementById("showRoomLeaderboardButton").style.display = "block";
         }
 
-        // Show the room leaderboard
+        // Show room leaderboard
         function showRoomLeaderboard() {
-            // Reset the room leaderboard before showing the updated one
             const roomLeaderboardList = document.getElementById("roomLeaderboardList");
             roomLeaderboardList.innerHTML = "";
 
-            const roomLeaderboard = roomPlayersData.sort((a, b) => b.points - a.points);
+            const leaderboard = roomPlayersData.sort((a, b) => b.points - a.points);
 
-            roomLeaderboard.forEach((player, index) => {
+            leaderboard.forEach((player, index) => {
                 const leaderboardItem = document.createElement("div");
                 leaderboardItem.classList.add("leaderboard-item");
                 leaderboardItem.textContent = `Top ${index + 1}: ${player.name} - ${player.points} points`;
@@ -286,6 +366,90 @@
             });
 
             document.getElementById("roomLeaderboardContainer").style.display = "block";
+        }
+
+        // Add multiple combined room player rows
+        function addMultipleCombinedRoomRows() {
+            const table = document.getElementById("combinedRoomPlayerTable");
+            const rowCount = table.rows.length + 1;
+            const teamCount = parseInt(document.getElementById("teamCountInput").value) || 1;
+
+            for (let i = 0; i < teamCount; i++) {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `  
+                    <td>${rowCount + i}</td>
+                    <td><input type="text" placeholder="Team Name"></td>
+                    <td><input type="number" min="1" max="60" placeholder="R 1 Place"></td>
+                    <td><input type="number" min="0" placeholder="R 1 Kills"></td>
+                    <td><input type="number" min="1" max="60" placeholder="R 2 Place"></td>
+                    <td><input type="number" min="0" placeholder="R 2 Kills"></td>
+                    <td><input type="number" min="1" max="60" placeholder="R 3 Place"></td>
+                    <td><input type="number" min="0" placeholder="R 3 Kills"></td>
+                    <td><input type="number" min="1" max="60" placeholder="R 4 Place"></td>
+                    <td><input type="number" min="0" placeholder="R 4 Kills"></td>
+                    <td class="combinedTotalPoints">0</td>
+                `;
+                table.appendChild(row);
+            }
+        }
+
+        // Calculate combined room points (for 4 rooms)
+        function calculateCombinedRoomPoints() {
+            const rows = document.querySelectorAll("#combinedRoomPlayerTable tr");
+            combinedRoomPlayersData = [];
+
+            rows.forEach((row, index) => {
+                const room1Place = parseInt(row.children[2].querySelector("input").value) || 0;
+                const room1Kills = parseInt(row.children[3].querySelector("input").value) || 0;
+                const room2Place = parseInt(row.children[4].querySelector("input").value) || 0;
+                const room2Kills = parseInt(row.children[5].querySelector("input").value) || 0;
+                const room3Place = parseInt(row.children[6].querySelector("input").value) || 0;
+                const room3Kills = parseInt(row.children[7].querySelector("input").value) || 0;
+                const room4Place = parseInt(row.children[8].querySelector("input").value) || 0;
+                const room4Kills = parseInt(row.children[9].querySelector("input").value) || 0;
+                const combinedTotalPointsCell = row.children[10];
+
+                let totalPoints = 0;
+                if (room1Place && room1Place <= 10) {
+                    totalPoints += pointsSystem[room1Place - 1] + room1Kills;
+                }
+                if (room2Place && room2Place <= 10) {
+                    totalPoints += pointsSystem[room2Place - 1] + room2Kills;
+                }
+                if (room3Place && room3Place <= 10) {
+                    totalPoints += pointsSystem[room3Place - 1] + room3Kills;
+                }
+                if (room4Place && room4Place <= 10) {
+                    totalPoints += pointsSystem[room4Place - 1] + room4Kills;
+                }
+
+                combinedTotalPointsCell.textContent = totalPoints;
+
+                const teamName = row.children[1].querySelector("input").value;
+                if (teamName) {
+                    combinedRoomPlayersData.push({ team: teamName, points: totalPoints });
+                }
+            });
+
+            document.getElementById("showCombinedRoomLeaderboardButton").style.display = "block";
+        }
+
+        // Show combined room leaderboard
+        function showCombinedRoomLeaderboard() {
+            const combinedLeaderboardList = document.getElementById("combinedRoomLeaderboardList");
+            combinedLeaderboardList.innerHTML = "";
+
+            const leaderboard = combinedRoomPlayersData.sort((a, b) => b.points - a.points);
+
+            leaderboard.forEach((team, index) => {
+                const leaderboardItem = document.createElement("div");
+                leaderboardItem.classList.add("leaderboard-item");
+                leaderboardItem.textContent = `Top ${index + 1}: ${team.team} - ${team.points} points`;
+                combinedLeaderboardList.appendChild(leaderboardItem);
+            });
+
+            document.getElementById("combinedLeaderboardContainer").style.display = "block";
         }
     </script>
 </body>
