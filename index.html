@@ -107,7 +107,7 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Player Name</th>
+                    <th>team Name</th>
                     <th>Placement</th>
                     <th>Kills</th>
                     <th>Total Points</th>
@@ -115,7 +115,7 @@
             </thead>
             <tbody id="playerTable"></tbody>
         </table>
-        <a href="#" class="button" onclick="addPlayerRow()">Add Player</a>
+        <a href="#" class="button" onclick="addPlayerRow()">Add team</a>
         <a href="#" class="button" onclick="calculatePoints()">Calculate Match Points</a>
 
         <!-- Show Leaderboard Button -->
@@ -132,7 +132,7 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Player Name</th>
+                    <th>team Name</th>
                     <th>Room 1</th>
                     <th>Room 2</th>
                     <th>Room 3</th>
@@ -142,7 +142,7 @@
             </thead>
             <tbody id="roomPlayerTable"></tbody>
         </table>
-        <a href="#" class="button" onclick="addRoomPlayerRow()">Add Room Player</a>
+        <a href="#" class="button" onclick="addRoomPlayerRow()">Add team room</a>
         <a href="#" class="button" onclick="calculateRoomPoints()">Calculate Room Points</a>
 
         <!-- Show Room Leaderboard Button -->
@@ -168,7 +168,7 @@
 
             row.innerHTML = `  
                 <td>${rowCount}</td>
-                <td><input type="text" placeholder="Enter Player Name"></td>
+                <td><input type="text" placeholder="Enter team Name"></td>
                 <td><input type="number" min="1" max="60" placeholder="Placement"></td>
                 <td><input type="number" min="0" placeholder="Kills"></td>
                 <td class="points">0</td>
@@ -232,7 +232,7 @@
 
             row.innerHTML = `  
                 <td>${rowCount}</td>
-                <td><input type="text" placeholder="Enter Player Name"></td>
+                <td><input type="text" placeholder="Enter team Name"></td>
                 <td><input type="number" placeholder="Room 1"></td>
                 <td><input type="number" placeholder="Room 2"></td>
                 <td><input type="number" placeholder="Room 3"></td>
