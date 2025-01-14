@@ -133,6 +133,14 @@
             color: #ffffff;
             margin-top: 30px;
         }
+
+        /* Footer Styling */
+        footer {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 40px;
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
@@ -236,8 +244,13 @@
         </div>
     </div>
 
+    <!-- Footer Section -->
+    <footer>
+        <p>Developed by Arinas</p>
+    </footer>
+
     <script>
-        const pointsSystem = [15, 12, 10, 8, 6, 5, 4, 3, 2, 1];
+        const pointsSystem = [15, 12, 10, 8, 6, 5, 4, 3, 2, 1];  // Modified points system
         let playersData = [];
         let roomPlayersData = [];
         let combinedRoomPlayersData = [];
@@ -394,12 +407,12 @@
             }
         }
 
-        // Calculate combined room points (for 4 rooms)
+        // Calculate combined room points (for multiple rooms)
         function calculateCombinedRoomPoints() {
             const rows = document.querySelectorAll("#combinedRoomPlayerTable tr");
             combinedRoomPlayersData = [];
 
-            rows.forEach((row, index) => {
+            rows.forEach((row) => {
                 const room1Place = parseInt(row.children[2].querySelector("input").value) || 0;
                 const room1Kills = parseInt(row.children[3].querySelector("input").value) || 0;
                 const room2Place = parseInt(row.children[4].querySelector("input").value) || 0;
@@ -408,27 +421,19 @@
                 const room3Kills = parseInt(row.children[7].querySelector("input").value) || 0;
                 const room4Place = parseInt(row.children[8].querySelector("input").value) || 0;
                 const room4Kills = parseInt(row.children[9].querySelector("input").value) || 0;
-                const combinedTotalPointsCell = row.children[10];
 
-                let totalPoints = 0;
-                if (room1Place && room1Place <= 10) {
-                    totalPoints += pointsSystem[room1Place - 1] + room1Kills;
-                }
-                if (room2Place && room2Place <= 10) {
-                    totalPoints += pointsSystem[room2Place - 1] + room2Kills;
-                }
-                if (room3Place && room3Place <= 10) {
-                    totalPoints += pointsSystem[room3Place - 1] + room3Kills;
-                }
-                if (room4Place && room4Place <= 10) {
-                    totalPoints += pointsSystem[room4Place - 1] + room4Kills;
-                }
+                // Calculate total points for each room
+                const totalPoints = 
+                    (pointsSystem[room1Place - 1] || 0) + room1Kills +
+                    (pointsSystem[room2Place - 1] || 0) + room2Kills +
+                    (pointsSystem[room3Place - 1] || 0) + room3Kills +
+                    (pointsSystem[room4Place - 1] || 0) + room4Kills;
 
-                combinedTotalPointsCell.textContent = totalPoints;
+                row.children[10].textContent = totalPoints;
 
                 const teamName = row.children[1].querySelector("input").value;
                 if (teamName) {
-                    combinedRoomPlayersData.push({ team: teamName, points: totalPoints });
+                    combinedRoomPlayersData.push({ name: teamName, points: totalPoints });
                 }
             });
 
@@ -437,16 +442,16 @@
 
         // Show combined room leaderboard
         function showCombinedRoomLeaderboard() {
-            const combinedLeaderboardList = document.getElementById("combinedRoomLeaderboardList");
-            combinedLeaderboardList.innerHTML = "";
+            const combinedRoomLeaderboardList = document.getElementById("combinedRoomLeaderboardList");
+            combinedRoomLeaderboardList.innerHTML = "";
 
             const leaderboard = combinedRoomPlayersData.sort((a, b) => b.points - a.points);
 
-            leaderboard.forEach((team, index) => {
+            leaderboard.forEach((player, index) => {
                 const leaderboardItem = document.createElement("div");
                 leaderboardItem.classList.add("leaderboard-item");
-                leaderboardItem.textContent = `Top ${index + 1}: ${team.team} - ${team.points} points`;
-                combinedLeaderboardList.appendChild(leaderboardItem);
+                leaderboardItem.textContent = `Top ${index + 1}: ${player.name} - ${player.points} points`;
+                combinedRoomLeaderboardList.appendChild(leaderboardItem);
             });
 
             document.getElementById("combinedLeaderboardContainer").style.display = "block";
