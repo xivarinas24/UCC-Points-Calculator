@@ -63,21 +63,71 @@
             background-color: rgba(179, 0, 0, 0.9);
         }
 
-        .button {
-            display: block;
-            width: 200px;
-            padding: 10px;
-            background-color: #470163;
-            color: #ffffff;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 15px;
-            font-weight: bold;
-            margin: 10px;
+        .button-85 {
+            padding: 0.6em 2em;
+            border: none;
+            outline: none;
+            color: rgb(255, 255, 255);
+            background: #111;
+            cursor: pointer;
+            position: relative;
+            z-index: 0;
+            border-radius: 10px;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
         }
 
-        .button:hover {
-            background-color: #cc005f;
+        .button-85:before {
+            content: "";
+            background: linear-gradient(
+                45deg,
+                #ff0000,
+                #ff7300,
+                #fffb00,
+                #48ff00,
+                #00ffd5,
+                #002bff,
+                #7a00ff,
+                #ff00c8,
+                #ff0000
+            );
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            background-size: 400%;
+            z-index: -1;
+            filter: blur(5px);
+            -webkit-filter: blur(5px);
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            animation: glowing-button-85 20s linear infinite;
+            transition: opacity 0.3s ease-in-out;
+            border-radius: 10px;
+        }
+
+        @keyframes glowing-button-85 {
+            0% {
+                background-position: 0 0;
+            }
+            50% {
+                background-position: 400% 0;
+            }
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        .button-85:after {
+            z-index: -1;
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #222;
+            left: 0;
+            top: 0;
+            border-radius: 10px;
         }
 
         input {
@@ -169,11 +219,11 @@
         </table>
 
         <div class="button-container">
-            <a href="#" class="button" onclick="addMultiplePlayerRows()">ADD PLAYER</a>
-            <a href="#" class="button" onclick="calculatePoints()">CALCULATE 1 ROOM</a>
+            <a href="#" class="button-85" onclick="addMultiplePlayerRows()">ADD PLAYER</a>
+            <a href="#" class="button-85" onclick="calculatePoints()">CALCULATE 1 ROOM</a>
         </div>
 
-        <a href="#" class="button" onclick="showLeaderboard()" id="showLeaderboardButton" style="display: none;">Show Leaderboard</a>
+        <a href="#" class="button-85" onclick="showLeaderboard()" id="showLeaderboardButton" style="display: none;">Show Leaderboard</a>
 
         <div id="leaderboardContainer">
             <h2>Leaderboard</h2>
@@ -197,11 +247,11 @@
         </table>
 
         <div class="button-container">
-            <a href="#" class="button" onclick="addMultipleRoomPlayerRows()">ADD PLAYER </a>
-            <a href="#" class="button" onclick="calculateRoomPoints()">CALCULATE RESULTS</a>
+            <a href="#" class="button-85" onclick="addMultipleRoomPlayerRows()">ADD PLAYER </a>
+            <a href="#" class="button-85" onclick="calculateRoomPoints()">CALCULATE RESULTS</a>
         </div>
 
-        <a href="#" class="button" onclick="showRoomLeaderboard()" id="showRoomLeaderboardButton" style="display: none;">SHOW LEADERBOARD</a>
+        <a href="#" class="button-85" onclick="showRoomLeaderboard()" id="showRoomLeaderboardButton" style="display: none;">SHOW LEADERBOARD</a>
 
         <div id="roomLeaderboardContainer">
             <h2>CALCULATE RESULTS</h2>
@@ -232,11 +282,11 @@
         </table>
 
         <div class="button-container">
-            <a href="#" class="button" onclick="addMultipleCombinedRoomRows()">ADD TEAM</a>
-            <a href="#" class="button" onclick="calculateCombinedRoomPoints()">CALCULATE RESULTS</a>
+            <a href="#" class="button-85" onclick="addMultipleCombinedRoomRows()">ADD TEAM</a>
+            <a href="#" class="button-85" onclick="calculateCombinedRoomPoints()">CALCULATE RESULTS</a>
         </div>
         <!-- Corrected the ID for the button -->
-        <a href="#" class="button" onclick="showCombinedRoomLeaderboard()" id="showCombinedRoomLeaderboardButton" style="display: none;">Show Final Results</a>
+        <a href="#" class="button-85" onclick="showCombinedRoomLeaderboard()" id="showCombinedRoomLeaderboardButton" style="display: none;">Show Final Results</a>
 
         <div id="combinedLeaderboardContainer">
             <h2>TOP LEADERBOARD</h2>
@@ -421,15 +471,25 @@
                 const room3Kills = parseInt(row.children[7].querySelector("input").value) || 0;
                 const room4Place = parseInt(row.children[8].querySelector("input").value) || 0;
                 const room4Kills = parseInt(row.children[9].querySelector("input").value) || 0;
+                const totalPointsCell = row.children[10];
 
-                // Calculate total points for each room
-                const totalPoints = 
-                    (pointsSystem[room1Place - 1] || 0) + room1Kills +
-                    (pointsSystem[room2Place - 1] || 0) + room2Kills +
-                    (pointsSystem[room3Place - 1] || 0) + room3Kills +
-                    (pointsSystem[room4Place - 1] || 0) + room4Kills;
+                let totalPoints = 0;
 
-                row.children[10].textContent = totalPoints;
+                // Calculate points for each room
+                const rooms = [
+                    { place: room1Place, kills: room1Kills },
+                    { place: room2Place, kills: room2Kills },
+                    { place: room3Place, kills: room3Kills },
+                    { place: room4Place, kills: room4Kills }
+                ];
+
+                rooms.forEach((room) => {
+                    if (room.place && room.place >= 1 && room.place <= 10) {
+                        totalPoints += pointsSystem[room.place - 1] + room.kills;
+                    }
+                });
+
+                totalPointsCell.textContent = totalPoints;
 
                 const teamName = row.children[1].querySelector("input").value;
                 if (teamName) {
