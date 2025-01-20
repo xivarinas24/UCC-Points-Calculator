@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCC Points Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('triple.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            color: #ffffff;
+        }
+
+        .content {
+            max-width: 700px;
+            width: 100%;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0);
+            margin: 20px auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header img {
+            width: 70px;
+            height: 70px;
+            vertical-align: middle;
+        }
+
+        header h1 {
+            display: inline;
+            color: #470163;
+            margin-left: 10px;
+            font-size: 50px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #ffffff;
+            margin: 20px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0);
+        }
+
+        th, td {
+            border: 1px solid #800000;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: rgba(179, 0, 0, 0.9);
+        }
+
+        .button-85 {
+            padding: 0.6em 2em;
+            border: none;
+            outline: none;
+            color: rgb(255, 255, 255);
+            background: #111;
+            cursor: pointer;
+            position: relative;
+            z-index: 0;
+            border-radius: 10px;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .button-85:before {
+            content: "";
+            background: linear-gradient(
+                45deg,
+                #ff0000,
+                #ff7300,
+                #fffb00,
+                #48ff00,
+                #00ffd5,
+                #002bff,
+                #7a00ff,
+                #ff00c8,
+                #ff0000
+            );
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            background-size: 400%;
+            z-index: -1;
+            filter: blur(5px);
+            -webkit-filter: blur(5px);
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            animation: glowing-button-85 20s linear infinite;
+            transition: opacity 0.3s ease-in-out;
+            border-radius: 10px;
+        }
+
+        @keyframes glowing-button-85 {
+            0% {
+                background-position: 0 0;
+            }
+            50% {
+                background-position: 400% 0;
+            }
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        .button-85:after {
+            z-index: -1;
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #222;
+            left: 0;
+            top: 0;
+            border-radius: 10px;
+        }
+
+        input {
+            background-color: #470163;
+            color: #ffffff;
+            border: 1px solid #8000a0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        #leaderboardContainer, #roomLeaderboardContainer, #combinedLeaderboardContainer {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .leaderboard-item {
+            background-color: #3e004f;
+            padding: 10px;
+            border: 1px solid #600080;
+            margin: 5px;
+            font-size: 18px;
+        }
+
+        .fixed-table {
+            table-layout: fixed;
+        }
+
+        table.fixed-table tbody tr td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-top: 30px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 40px;
+            color: #ffffff;
+        }
+
+        /* New Icon Styling */
+        .total-kills-icon {
+            margin-left: 5px;
+            font-size: 20px;
+            color: yellow;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="content">
+        <header>
+            <img src="xiv.png" alt="UCC Logo">
+            <h1>UCC Points Calculator</h1>
+        </header>
+
+        <div style="text-align: center;">
+            <input id="teamCountInput" type="number" min="1" placeholder="Enter number of teams" style="width: 100px; margin-bottom: 20px"/>
+        </div>
+
+        <!-- Combined Room Points Calculation Table -->
+        <table class="fixed-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Team Name</th>
+                    <th>R 1 Place</th>
+                    <th>R 1 Kills</th>
+                    <th>R 2 Place</th>
+                    <th>R 2 Kills</th>
+                    <th>R 3 Place</th>
+                    <th>R 3 Kills</th>
+                    <th>R 4 Place</th>
+                    <th>R 4 Kills</th>
+                    <th>Total <span class="total-kills-icon">🏆</span></th> <!-- Total Points Icon -->
+                    <th>Total Kills <span class="total-kills-icon">💥</span></th> <!-- Total Kills Icon -->
+                </tr>
+            </thead>
+            <tbody id="combinedRoomPlayerTable"></tbody>
+        </table>
+
+        <div class="button-container">
+            <a href="#" class="button-85" onclick="addMultipleCombinedRoomRows(event)">ADD TEAM</a>
+            <a href="#" class="button-85" onclick="calculateCombinedRoomPoints(event)">CALCULATE RESULTS</a>
+        </div>
+        <!-- Corrected the ID for the button -->
+        <a href="#" class="button-85" onclick="showCombinedRoomLeaderboard(event)" id="showCombinedRoomLeaderboardButton" style="display: none;">Show Final Results</a>
+
+        <div id="combinedLeaderboardContainer">
+            <h2>TOP LEADERBOARD</h2>
+            <div id="combinedRoomLeaderboardList"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Developed by Arinas</p>
+    </footer>
+
+    <script>
+        const pointsSystem = [15, 12, 10, 8, 6, 5, 4, 3, 2, 1];  // Modified points system
+        let playersData = [];
+        let roomPlayersData = [];
+        let combinedRoomPlayersData = [];
+
+        function addMultipleCombinedRoomRows(event) {
+            event.preventDefault(); // Prevents page scroll
+            const table = document.getElementById("combinedRoomPlayerTable");
+            const rowCount = table.rows.length + 1;
+            const teamCount = parseInt(document.getElementById("teamCountInput").value) || 1;
+
+            for (let i = 0; i < teamCount; i++) {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `  
+                    <td>${rowCount + i}</td>
+                    <td><input type="text" placeholder="Team Name"></td>
+                    <td><input type="number" min="1" max="60" placeholder="R 1 Place"></td>
+                    <td><input type="number" min="0" placeholder="R 1 Kills"></td>
+                    <td><input type="number" min="1" max="60" placeholder="R 2 Place"></td>
+                    <td><input type="number" min="0" placeholder="R 2 Kills"></td>
+                    <td><input type="number" min="1" max="60" placeholder="R 3 Place"></td>
+                    <td><input type="number" min="0" placeholder="R 3 Kills"></td>
+                    <td><input type="number" min="1" max="60" placeholder="R 4 Place"></td>
+                    <td><input type="number" min="0" placeholder="R 4 Kills"></td>
+                    <td class="combinedTotalPoints">0</td>
+                    <td class="combinedTotalKills">0</td> <!-- Total Kills Cell -->
+                `;
+                table.appendChild(row);
+            }
+        }
+
+        function calculateCombinedRoomPoints(event) {
+            event.preventDefault(); // Prevents page scroll
+            const rows = document.querySelectorAll("#combinedRoomPlayerTable tr");
+            combinedRoomPlayersData = [];
+
+            rows.forEach((row) => {
+                const room1Place = parseInt(row.children[2].querySelector("input").value) || 0;
+                const room1Kills = parseInt(row.children[3].querySelector("input").value) || 0;
+                const room2Place = parseInt(row.children[4].querySelector("input").value) || 0;
+                const room2Kills = parseInt(row.children[5].querySelector("input").value) || 0;
+                const room3Place = parseInt(row.children[6].querySelector("input").value) || 0;
+                const room3Kills = parseInt(row.children[7].querySelector("input").value) || 0;
+                const room4Place = parseInt(row.children[8].querySelector("input").value) || 0;
+                const room4Kills = parseInt(row.children[9].querySelector("input").value) || 0;
+                const totalPointsCell = row.children[10];
+                const totalKillsCell = row.children[11]; // Total Kills Cell
+
+                let totalPoints = 0;
+                let totalKills = 0;
+
+                // Calculate points and total kills for each room
+                const rooms = [
+                    { place: room1Place, kills: room1Kills },
+                    { place: room2Place, kills: room2Kills },
+                    { place: room3Place, kills: room3Kills },
+                    { place: room4Place, kills: room4Kills }
+                ];
+
+                rooms.forEach((room) => {
+                    if (room.place && room.place >= 1 && room.place <= 10) {
+                        totalPoints += pointsSystem[room.place - 1] + room.kills;
+                        totalKills += room.kills;
+                    }
+                });
+
+                totalPointsCell.textContent = totalPoints;
+                totalKillsCell.textContent = totalKills;
+
+                const teamName = row.children[1].querySelector("input").value;
+                if (teamName) {
+                    combinedRoomPlayersData.push({ name: teamName, points: totalPoints, kills: totalKills });
+                }
+            });
+
+            document.getElementById("showCombinedRoomLeaderboardButton").style.display = "block";
+        }
+
+        function showCombinedRoomLeaderboard(event) {
+            event.preventDefault(); // Prevents page scroll
+            const combinedRoomLeaderboardList = document.getElementById("combinedRoomLeaderboardList");
+            combinedRoomLeaderboardList.innerHTML = "";
+
+            const leaderboard = combinedRoomPlayersData.sort((a, b) => b.points - a.points);
+
+            leaderboard.forEach((player, index) => {
+                const leaderboardItem = document.createElement("div");
+                leaderboardItem.classList.add("leaderboard-item");
+                leaderboardItem.textContent = `Top ${index + 1}: ${player.name} - ${player.points} points, ${player.kills} kills`;
+                combinedRoomLeaderboardList.appendChild(leaderboardItem);
+            });
+
+            document.getElementById("combinedLeaderboardContainer").style.display = "block";
+        }
+    </script>
+</body>
+</html>
