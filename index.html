@@ -176,20 +176,17 @@
             gap: 10px;
         }
 
-        .title {
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffffff;
-            margin-top: 30px;
-        }
-
         /* Footer Styling */
         footer {
             text-align: center;
             font-size: 14px;
             margin-top: 40px;
             color: #ffffff;
+        }
+
+        .visit-button-container {
+            margin-top: 30px;
+            text-align: center;
         }
     </style>
 </head>
@@ -219,11 +216,11 @@
         </table>
 
         <div class="button-container">
-            <a href="#" class="button-85" onclick="addMultiplePlayerRows()">ADD PLAYER</a>
-            <a href="#" class="button-85" onclick="calculatePoints()">CALCULATE 1 ROOM</a>
+            <a href="#" class="button-85" onclick="addMultiplePlayerRows(event)">ADD PLAYER</a>
+            <a href="#" class="button-85" onclick="calculatePoints(event)">CALCULATE 1 ROOM</a>
         </div>
 
-        <a href="#" class="button-85" onclick="showLeaderboard()" id="showLeaderboardButton" style="display: none;">Show Leaderboard</a>
+        <a href="#" class="button-85" onclick="showLeaderboard(event)" id="showLeaderboardButton" style="display: none;">Show Leaderboard</a>
 
         <div id="leaderboardContainer">
             <h2>Leaderboard</h2>
@@ -247,51 +244,22 @@
         </table>
 
         <div class="button-container">
-            <a href="#" class="button-85" onclick="addMultipleRoomPlayerRows()">ADD PLAYER </a>
-            <a href="#" class="button-85" onclick="calculateRoomPoints()">CALCULATE RESULTS</a>
+            <a href="#" class="button-85" onclick="addMultipleRoomPlayerRows(event)">ADD PLAYER </a>
+            <a href="#" class="button-85" onclick="calculateRoomPoints(event)">CALCULATE RESULTS</a>
         </div>
 
-        <a href="#" class="button-85" onclick="showRoomLeaderboard()" id="showRoomLeaderboardButton" style="display: none;">SHOW LEADERBOARD</a>
+        <a href="#" class="button-85" onclick="showRoomLeaderboard(event)" id="showRoomLeaderboardButton" style="display: none;">SHOW LEADERBOARD</a>
 
         <div id="roomLeaderboardContainer">
             <h2>CALCULATE RESULTS</h2>
             <div id="roomLeaderboardList"></div>
         </div>
 
-        <!-- Title for Duos and Teams Final Results -->
-        <div class="title">DUOS AND TEAMS FINAL RESULTS </div>
-
-        <!-- Combined Room Points Calculation Table -->
-        <table class="fixed-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Team Name</th>
-                    <th>R 1 Place</th>
-                    <th>R 1 Kills</th>
-                    <th>R 2 Place</th>
-                    <th>R 2 Kills</th>
-                    <th>R 3 Place</th>
-                    <th>R 3 Kills</th>
-                    <th>R 4 Place</th>
-                    <th>R 4 Kills</th>
-                    <th>Total </th>
-                </tr>
-            </thead>
-            <tbody id="combinedRoomPlayerTable"></tbody>
-        </table>
-
-        <div class="button-container">
-            <a href="#" class="button-85" onclick="addMultipleCombinedRoomRows()">ADD TEAM</a>
-            <a href="#" class="button-85" onclick="calculateCombinedRoomPoints()">CALCULATE RESULTS</a>
+        <!-- Link to UCC Esports -->
+        <div class="visit-button-container">
+            <a href="https://www.uccesports.site" class="button-85" target="_blank">Visit UCC Esports</a>
         </div>
-        <!-- Corrected the ID for the button -->
-        <a href="#" class="button-85" onclick="showCombinedRoomLeaderboard()" id="showCombinedRoomLeaderboardButton" style="display: none;">Show Final Results</a>
 
-        <div id="combinedLeaderboardContainer">
-            <h2>TOP LEADERBOARD</h2>
-            <div id="combinedRoomLeaderboardList"></div>
-        </div>
     </div>
 
     <!-- Footer Section -->
@@ -306,7 +274,8 @@
         let combinedRoomPlayersData = [];
 
         // Add multiple player rows for match results based on input number
-        function addMultiplePlayerRows() {
+        function addMultiplePlayerRows(event) {
+            event.preventDefault();  // Prevent default action (scrolling)
             const table = document.getElementById("playerTable");
             const rowCount = table.rows.length + 1;
             const teamCount = parseInt(document.getElementById("teamCountInput").value) || 1;
@@ -326,7 +295,8 @@
         }
 
         // Calculate points for match results (placement + kills)
-        function calculatePoints() {
+        function calculatePoints(event) {
+            event.preventDefault();  // Prevent default action (scrolling)
             const rows = document.querySelectorAll("#playerTable tr");
             playersData = []; 
 
@@ -352,7 +322,8 @@
             document.getElementById("showLeaderboardButton").style.display = "block";
         }
 
-        function showLeaderboard() {
+        function showLeaderboard(event) {
+            event.preventDefault();  // Prevent default action (scrolling)
             const leaderboardList = document.getElementById("leaderboardList");
             leaderboardList.innerHTML = "";
 
@@ -369,7 +340,8 @@
         }
 
         // Add multiple room player rows
-        function addMultipleRoomPlayerRows() {
+        function addMultipleRoomPlayerRows(event) {
+            event.preventDefault();  // Prevent default action (scrolling)
             const table = document.getElementById("roomPlayerTable");
             const rowCount = table.rows.length + 1;
             const teamCount = parseInt(document.getElementById("teamCountInput").value) || 1;
@@ -391,7 +363,8 @@
         }
 
         // Calculate room points (for 4 rooms)
-        function calculateRoomPoints() {
+        function calculateRoomPoints(event) {
+            event.preventDefault();  // Prevent default action (scrolling)
             const rows = document.querySelectorAll("#roomPlayerTable tr");
             roomPlayersData = [];
 
@@ -415,9 +388,10 @@
         }
 
         // Show room leaderboard
-        function showRoomLeaderboard() {
-            const roomLeaderboardList = document.getElementById("roomLeaderboardList");
-            roomLeaderboardList.innerHTML = "";
+        function showRoomLeaderboard(event) {
+            event.preventDefault();  // Prevent default action (scrolling)
+            const leaderboardList = document.getElementById("roomLeaderboardList");
+            leaderboardList.innerHTML = "";
 
             const leaderboard = roomPlayersData.sort((a, b) => b.points - a.points);
 
@@ -425,96 +399,10 @@
                 const leaderboardItem = document.createElement("div");
                 leaderboardItem.classList.add("leaderboard-item");
                 leaderboardItem.textContent = `Top ${index + 1}: ${player.name} - ${player.points} points`;
-                roomLeaderboardList.appendChild(leaderboardItem);
+                leaderboardList.appendChild(leaderboardItem);
             });
 
             document.getElementById("roomLeaderboardContainer").style.display = "block";
-        }
-
-        // Add multiple combined room player rows
-        function addMultipleCombinedRoomRows() {
-            const table = document.getElementById("combinedRoomPlayerTable");
-            const rowCount = table.rows.length + 1;
-            const teamCount = parseInt(document.getElementById("teamCountInput").value) || 1;
-
-            for (let i = 0; i < teamCount; i++) {
-                const row = document.createElement("tr");
-
-                row.innerHTML = `  
-                    <td>${rowCount + i}</td>
-                    <td><input type="text" placeholder="Team Name"></td>
-                    <td><input type="number" min="1" max="60" placeholder="R 1 Place"></td>
-                    <td><input type="number" min="0" placeholder="R 1 Kills"></td>
-                    <td><input type="number" min="1" max="60" placeholder="R 2 Place"></td>
-                    <td><input type="number" min="0" placeholder="R 2 Kills"></td>
-                    <td><input type="number" min="1" max="60" placeholder="R 3 Place"></td>
-                    <td><input type="number" min="0" placeholder="R 3 Kills"></td>
-                    <td><input type="number" min="1" max="60" placeholder="R 4 Place"></td>
-                    <td><input type="number" min="0" placeholder="R 4 Kills"></td>
-                    <td class="combinedTotalPoints">0</td>
-                `;
-                table.appendChild(row);
-            }
-        }
-
-        // Calculate combined room points (for multiple rooms)
-        function calculateCombinedRoomPoints() {
-            const rows = document.querySelectorAll("#combinedRoomPlayerTable tr");
-            combinedRoomPlayersData = [];
-
-            rows.forEach((row) => {
-                const room1Place = parseInt(row.children[2].querySelector("input").value) || 0;
-                const room1Kills = parseInt(row.children[3].querySelector("input").value) || 0;
-                const room2Place = parseInt(row.children[4].querySelector("input").value) || 0;
-                const room2Kills = parseInt(row.children[5].querySelector("input").value) || 0;
-                const room3Place = parseInt(row.children[6].querySelector("input").value) || 0;
-                const room3Kills = parseInt(row.children[7].querySelector("input").value) || 0;
-                const room4Place = parseInt(row.children[8].querySelector("input").value) || 0;
-                const room4Kills = parseInt(row.children[9].querySelector("input").value) || 0;
-                const totalPointsCell = row.children[10];
-
-                let totalPoints = 0;
-
-                // Calculate points for each room
-                const rooms = [
-                    { place: room1Place, kills: room1Kills },
-                    { place: room2Place, kills: room2Kills },
-                    { place: room3Place, kills: room3Kills },
-                    { place: room4Place, kills: room4Kills }
-                ];
-
-                rooms.forEach((room) => {
-                    if (room.place && room.place >= 1 && room.place <= 10) {
-                        totalPoints += pointsSystem[room.place - 1] + room.kills;
-                    }
-                });
-
-                totalPointsCell.textContent = totalPoints;
-
-                const teamName = row.children[1].querySelector("input").value;
-                if (teamName) {
-                    combinedRoomPlayersData.push({ name: teamName, points: totalPoints });
-                }
-            });
-
-            document.getElementById("showCombinedRoomLeaderboardButton").style.display = "block";
-        }
-
-        // Show combined room leaderboard
-        function showCombinedRoomLeaderboard() {
-            const combinedRoomLeaderboardList = document.getElementById("combinedRoomLeaderboardList");
-            combinedRoomLeaderboardList.innerHTML = "";
-
-            const leaderboard = combinedRoomPlayersData.sort((a, b) => b.points - a.points);
-
-            leaderboard.forEach((player, index) => {
-                const leaderboardItem = document.createElement("div");
-                leaderboardItem.classList.add("leaderboard-item");
-                leaderboardItem.textContent = `Top ${index + 1}: ${player.name} - ${player.points} points`;
-                combinedRoomLeaderboardList.appendChild(leaderboardItem);
-            });
-
-            document.getElementById("combinedLeaderboardContainer").style.display = "block";
         }
     </script>
 </body>
